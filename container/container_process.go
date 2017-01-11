@@ -30,7 +30,7 @@ type ContainerInfo struct {
 	Volume 		string `json:"volume"`	   //容器的数据卷
 }
 
-func NewParentProcess(tty bool, containerName, volume, imageName string) (*exec.Cmd, *os.File) {
+func NewParentProcess(tty bool, containerName, volume, imageName string, envSlice []string) (*exec.Cmd, *os.File) {
 	readPipe, writePipe, err := NewPipe()
 	if err != nil {
 		log.Errorf("New pipe error %v", err)
@@ -62,6 +62,7 @@ func NewParentProcess(tty bool, containerName, volume, imageName string) (*exec.
 	}
 
 	cmd.ExtraFiles = []*os.File{readPipe}
+	cmd.Env = append(os.Environ(), envSlice...)
 	NewWorkSpace(volume, imageName, containerName)
 	cmd.Dir = fmt.Sprintf(MntUrl, containerName)
 	return cmd, writePipe
