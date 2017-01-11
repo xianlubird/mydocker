@@ -4,14 +4,13 @@ import (
 	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"github.com/urfave/cli"
-	"github.com/xianlubird/mydocker/container"
 	"github.com/xianlubird/mydocker/cgroups/subsystems"
+	"github.com/xianlubird/mydocker/container"
 )
 
 var runCommand = cli.Command{
 	Name: "run",
-	Usage: `Create a container with namespace and cgroups limit
-			mydocker run -ti [command]`,
+	Usage: `Create a container with namespace and cgroups limit ie: mydocker run -ti [command]`,
 	Flags: []cli.Flag{
 		cli.BoolFlag{
 			Name:  "ti",
@@ -22,16 +21,20 @@ var runCommand = cli.Command{
 			Usage: "detach container",
 		},
 		cli.StringFlag{
-			Name: "m",
+			Name:  "m",
 			Usage: "memory limit",
 		},
 		cli.StringFlag{
-			Name: "cpushare",
+			Name:  "cpushare",
 			Usage: "cpushare limit",
 		},
 		cli.StringFlag{
-			Name: "cpuset",
+			Name:  "cpuset",
 			Usage: "cpuset limit",
+		},
+		cli.StringFlag{
+			Name:  "name",
+			Usage: "container name",
 		},
 	},
 	Action: func(context *cli.Context) error {
@@ -50,11 +53,12 @@ var runCommand = cli.Command{
 		}
 		resConf := &subsystems.ResourceConfig{
 			MemoryLimit: context.String("m"),
-			CpuSet: context.String("cpuset"),
-			CpuShare:context.String("cpushare"),
+			CpuSet:      context.String("cpuset"),
+			CpuShare:    context.String("cpushare"),
 		}
 		log.Infof("createTty %v", createTty)
-		Run(createTty, cmdArray, resConf)
+		containerName := context.String("name")
+		Run(createTty, cmdArray, resConf, containerName)
 		return nil
 	},
 }
@@ -66,5 +70,14 @@ var initCommand = cli.Command{
 		log.Infof("init come on")
 		err := container.RunContainerInitProcess()
 		return err
+	},
+}
+
+var listCommand = cli.Command{
+	Name:  "ps",
+	Usage: "list all the containers",
+	Action: func(context *cli.Context) error {
+		ListContainers()
+		return nil
 	},
 }
