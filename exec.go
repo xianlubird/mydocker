@@ -16,7 +16,7 @@ const ENV_EXEC_PID = "mydocker_pid"
 const ENV_EXEC_CMD = "mydocker_cmd"
 
 func ExecContainer(containerName string, comArray []string) {
-	pid, err := getContainerPidByName(containerName)
+	pid, err := GetContainerPidByName(containerName)
 	if err != nil {
 		log.Errorf("Exec container getContainerPidByName %s error %v", containerName, err)
 		return
@@ -38,7 +38,7 @@ func ExecContainer(containerName string, comArray []string) {
 	}
 }
 
-func getContainerPidByName(containerName string) (string, error) {
+func GetContainerPidByName(containerName string) (string, error) {
 	dirURL := fmt.Sprintf(container.DefaultInfoLocation, containerName)
 	configFilePath := dirURL + container.ConfigName
 	contentBytes, err := ioutil.ReadFile(configFilePath)
