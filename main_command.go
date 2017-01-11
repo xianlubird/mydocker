@@ -11,7 +11,7 @@ import (
 
 var runCommand = cli.Command{
 	Name: "run",
-	Usage: `Create a container with namespace and cgroups limit ie: mydocker run -ti [command]`,
+	Usage: `Create a container with namespace and cgroups limit ie: mydocker run -ti [image] [command]`,
 	Flags: []cli.Flag{
 		cli.BoolFlag{
 			Name:  "ti",
@@ -37,6 +37,10 @@ var runCommand = cli.Command{
 			Name:  "name",
 			Usage: "container name",
 		},
+		cli.StringFlag{
+			Name:  "v",
+			Usage: "volume",
+		},
 	},
 	Action: func(context *cli.Context) error {
 		if len(context.Args()) < 1 {
@@ -46,6 +50,11 @@ var runCommand = cli.Command{
 		for _, arg := range context.Args() {
 			cmdArray = append(cmdArray, arg)
 		}
+
+		//get image name
+		imageName := cmdArray[0]
+		cmdArray = cmdArray[1:]
+
 		createTty := context.Bool("ti")
 		detach := context.Bool("d")
 
@@ -59,7 +68,8 @@ var runCommand = cli.Command{
 		}
 		log.Infof("createTty %v", createTty)
 		containerName := context.String("name")
-		Run(createTty, cmdArray, resConf, containerName)
+		volume := context.String("v")
+		Run(createTty, cmdArray, resConf, containerName, volume, imageName)
 		return nil
 	},
 }
@@ -141,6 +151,20 @@ var removeCommand = cli.Command{
 		}
 		containerName := context.Args().Get(0)
 		removeContainer(containerName)
+		return nil
+	},
+}
+
+var commitCommand = cli.Command{
+	Name:  "commit",
+	Usage: "commit a container into image",
+	Action: func(context *cli.Context) error {
+		if len(context.Args()) < 2 {
+			return fmt.Errorf("Missing container name and image name")
+		}
+		containerName := context.Args().Get(0)
+		imageName := context.Args().Get(1)
+		commitContainer(containerName, imageName)
 		return nil
 	},
 }
