@@ -6,11 +6,12 @@ import (
 	"github.com/urfave/cli"
 	"github.com/xianlubird/mydocker/cgroups/subsystems"
 	"github.com/xianlubird/mydocker/container"
+	"github.com/xianlubird/mydocker/network"
 	"os"
 )
 
 var runCommand = cli.Command{
-	Name: "run",
+	Name:  "run",
 	Usage: `Create a container with namespace and cgroups limit ie: mydocker run -ti [image] [command]`,
 	Flags: []cli.Flag{
 		cli.BoolFlag{
@@ -42,8 +43,16 @@ var runCommand = cli.Command{
 			Usage: "volume",
 		},
 		cli.StringSliceFlag{
-			Name: "e",
+			Name:  "e",
 			Usage: "set environment",
+		},
+		cli.StringFlag{
+			Name:  "net",
+			Usage: "container network",
+		},
+		cli.StringSliceFlag{
+			Name: "p",
+			Usage: "port mapping",
 		},
 	},
 	Action: func(context *cli.Context) error {
@@ -73,9 +82,12 @@ var runCommand = cli.Command{
 		log.Infof("createTty %v", createTty)
 		containerName := context.String("name")
 		volume := context.String("v")
+		network := context.String("net")
 
 		envSlice := context.StringSlice("e")
-		Run(createTty, cmdArray, resConf, containerName, volume, imageName, envSlice)
+		portmapping := context.StringSlice("p")
+
+		Run(createTty, cmdArray, resConf, containerName, volume, imageName, envSlice, network, portmapping)
 		return nil
 	},
 }
@@ -100,7 +112,7 @@ var listCommand = cli.Command{
 }
 
 var logCommand = cli.Command{
-	Name: "logs",
+	Name:  "logs",
 	Usage: "print logs of a container",
 	Action: func(context *cli.Context) error {
 		if len(context.Args()) < 1 {
@@ -113,7 +125,7 @@ var logCommand = cli.Command{
 }
 
 var execCommand = cli.Command{
-	Name: "exec",
+	Name:  "exec",
 	Usage: "exec a command into container",
 	Action: func(context *cli.Context) error {
 		//This is for callback
@@ -136,7 +148,7 @@ var execCommand = cli.Command{
 }
 
 var stopCommand = cli.Command{
-	Name: "stop",
+	Name:  "stop",
 	Usage: "stop a container",
 	Action: func(context *cli.Context) error {
 		if len(context.Args()) < 1 {
@@ -149,7 +161,7 @@ var stopCommand = cli.Command{
 }
 
 var removeCommand = cli.Command{
-	Name: "rm",
+	Name:  "rm",
 	Usage: "remove unused containers",
 	Action: func(context *cli.Context) error {
 		if len(context.Args()) < 1 {
@@ -172,5 +184,61 @@ var commitCommand = cli.Command{
 		imageName := context.Args().Get(1)
 		commitContainer(containerName, imageName)
 		return nil
+	},
+}
+
+var networkCommand = cli.Command{
+	Name:  "network",
+	Usage: "container network commands",
+	Subcommands: []cli.Command {
+		{
+			Name: "create",
+			Usage: "create a container network",
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:  "driver",
+					Usage: "network driver",
+				},
+				cli.StringFlag{
+					Name:  "subnet",
+					Usage: "subnet cidr",
+				},
+			},
+			Action:func(context *cli.Context) error {
+				if len(context.Args()) < 1 {
+					return fmt.Errorf("Missing network name")
+				}
+				network.Init()
+				err := network.CreateNetwork(context.String("driver"), context.String("subnet"), context.Args()[0])
+				if err != nil {
+					return fmt.Errorf("create network error: %+v", err)
+				}
+				return nil
+			},
+		},
+		{
+			Name: "list",
+			Usage: "list container network",
+			Action:func(context *cli.Context) error {
+				network.Init()
+				network.ListNetwork()
+				return nil
+			},
+		},
+		{
+			Name: "remove",
+			Usage: "remove container network",
+			Action:func(context *cli.Context) error {
+				if len(context.Args()) < 1 {
+					return fmt.Errorf("Missing network name")
+				}
+				network.Init()
+				err := network.DeleteNetwork(context.Args()[0])
+				if err != nil {
+					return fmt.Errorf("remove network error: %+v", err)
+				}
+				return nil
+			},
+		},
 	},
 }

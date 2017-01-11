@@ -21,6 +21,9 @@ func ListContainers() {
 
 	var containers []*container.ContainerInfo
 	for _, file := range files {
+		if file.Name() == "network" {
+			continue
+		}
 		tmpContainer, err := getContainerInfo(file)
 		if err != nil {
 			log.Errorf("Get container info error %v", err)

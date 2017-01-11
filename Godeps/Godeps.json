@@ -1,7 +1,7 @@
 {
 	"ImportPath": "github.com/xianlubird/mydocker",
 	"GoVersion": "go1.6",
-	"GodepVersion": "v72",
+	"GodepVersion": "v74",
 	"Deps": [
 		{
 			"ImportPath": "github.com/Sirupsen/logrus",
@@ -61,6 +61,18 @@
 			"ImportPath": "github.com/urfave/cli",
 			"Comment": "v1.19.1",
 			"Rev": "0bdeddeeb0f650497d603c4ad7b20cfe685682f6"
+		},
+		{
+			"ImportPath": "github.com/vishvananda/netlink",
+			"Rev": "1890b34fa39d236a20a5ab69627d3c7f91fabdb9"
+		},
+		{
+			"ImportPath": "github.com/vishvananda/netns",
+			"Rev": "2c9454e4fc6e2edc1a1c84e64ed3d6e662fb6991"
+		},
+		{
+			"ImportPath": "github.com/vishvananda/netlink/nl",
+			"Rev": "1890b34fa39d236a20a5ab69627d3c7f91fabdb9"
 		},
 		{
 			"ImportPath": "golang.org/x/sys/unix",
