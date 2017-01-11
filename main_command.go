@@ -5,6 +5,7 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/urfave/cli"
 	"github.com/xianlubird/mydocker/container"
+	"github.com/xianlubird/mydocker/cgroups/subsystems"
 )
 
 var runCommand = cli.Command{
@@ -16,9 +17,21 @@ var runCommand = cli.Command{
 			Name:  "ti",
 			Usage: "enable tty",
 		},
+		cli.BoolFlag{
+			Name:  "d",
+			Usage: "detach container",
+		},
 		cli.StringFlag{
-			Name:  "v",
-			Usage: "volume",
+			Name: "m",
+			Usage: "memory limit",
+		},
+		cli.StringFlag{
+			Name: "cpushare",
+			Usage: "cpushare limit",
+		},
+		cli.StringFlag{
+			Name: "cpuset",
+			Usage: "cpuset limit",
 		},
 	},
 	Action: func(context *cli.Context) error {
@@ -29,9 +42,19 @@ var runCommand = cli.Command{
 		for _, arg := range context.Args() {
 			cmdArray = append(cmdArray, arg)
 		}
-		tty := context.Bool("ti")
-		volume := context.String("v")
-		Run(tty, cmdArray, volume)
+		createTty := context.Bool("ti")
+		detach := context.Bool("d")
+
+		if createTty && detach {
+			return fmt.Errorf("ti and d paramter can not both provided")
+		}
+		resConf := &subsystems.ResourceConfig{
+			MemoryLimit: context.String("m"),
+			CpuSet: context.String("cpuset"),
+			CpuShare:context.String("cpushare"),
+		}
+		log.Infof("createTty %v", createTty)
+		Run(createTty, cmdArray, resConf)
 		return nil
 	},
 }
@@ -43,19 +66,5 @@ var initCommand = cli.Command{
 		log.Infof("init come on")
 		err := container.RunContainerInitProcess()
 		return err
-	},
-}
-
-var commitCommand = cli.Command{
-	Name:  "commit",
-	Usage: "commit a container into image",
-	Action: func(context *cli.Context) error {
-		if len(context.Args()) < 1 {
-			return fmt.Errorf("Missing container name")
-		}
-		imageName := context.Args().Get(0)
-		//commitContainer(containerName)
-		commitContainer(imageName)
-		return nil
 	},
 }
