@@ -8,7 +8,7 @@
 
 京东[自己动手写docker](https://item.jd.com/12109237.html)
 
-![_Docker_01_](https://yqfile.alicdn.com/0a03f0cae69c1de61b321e8cd9951e85f7736aaf.jpeg)
+![_Docker_01_](book-pic.jpg)
 
 ## 目录
 - 前言
