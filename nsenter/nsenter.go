@@ -1,6 +1,8 @@
 package nsenter
 
 /*
+#define _GNU_SOURCE
+#include <unistd.h>
 #include <errno.h>
 #include <sched.h>
 #include <stdio.h>
