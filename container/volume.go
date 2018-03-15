@@ -99,13 +99,10 @@ func DeleteWorkSpace(volume, containerName string) {
 		volumeURLs := strings.Split(volume, ":")
 		length := len(volumeURLs)
 		if length == 2 && volumeURLs[0] != "" && volumeURLs[1] != "" {
-			DeleteMountPointWithVolume(volumeURLs, containerName)
-		} else {
-			DeleteMountPoint(containerName)
+			DeleteVolume(volumeURLs, containerName)
 		}
-	} else {
-		DeleteMountPoint(containerName)
 	}
+	DeleteMountPoint(containerName)
 	DeleteWriteLayer(containerName)
 }
 
@@ -123,23 +120,13 @@ func DeleteMountPoint(containerName string) error {
 	return nil
 }
 
-func DeleteMountPointWithVolume(volumeURLs []string, containerName string) error {
+func DeleteVolume(volumeURLs []string, containerName string) error {
 	mntURL := fmt.Sprintf(MntUrl, containerName)
 	containerUrl := mntURL + "/" +  volumeURLs[1]
 	if _, err := exec.Command("umount", containerUrl).CombinedOutput(); err != nil {
 		log.Errorf("Umount volume %s failed. %v", containerUrl, err)
 		return err
 	}
-
-	if _, err := exec.Command("umount", mntURL).CombinedOutput(); err != nil {
-		log.Errorf("Umount mountpoint %s failed. %v", mntURL, err)
-		return err
-	}
-
-	if err := os.RemoveAll(mntURL); err != nil {
-		log.Errorf("Remove mountpoint dir %s error %v", mntURL, err)
-	}
-
 	return nil
 }
 
