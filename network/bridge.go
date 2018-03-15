@@ -129,7 +129,7 @@ func createBridgeInterface(bridgeName string) error {
 	la := netlink.NewLinkAttrs()
 	la.Name = bridgeName
 
-	br := &netlink.Bridge{la}
+	br := &netlink.Bridge{LinkAttrs: la}
 	if err := netlink.LinkAdd(br); err != nil {
 		return fmt.Errorf("Bridge creation failed for bridge %s: %v", bridgeName, err)
 	}
@@ -169,7 +169,7 @@ func setInterfaceIP(name string, rawIP string) error {
 	if err != nil {
 		return err
 	}
-	addr := &netlink.Addr{ipNet, "", 0, 0, nil}
+	addr := &netlink.Addr{IPNet: ipNet, Peer: ipNet, Label: "", Flags: 0, Scope: 0, Broadcast: nil}
 	return netlink.AddrAdd(iface, addr)
 }
 
