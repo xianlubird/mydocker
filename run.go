@@ -5,8 +5,8 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"os"
 	"strings"
-	"./cgroups/subsystems"
-	"./cgroups/"
+	"github.com/xianlubird/mydocker/cgroups/subsystems"
+	"github.com/xianlubird/mydocker/cgroups"
 )
 
 
