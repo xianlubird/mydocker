@@ -34,10 +34,12 @@ func (s *MemorySubSystem) Remove(cgroupPath string) error {
 }
 
 
-func (s *MemorySubSystem) Apply(cgroupPath string, pid int) error {
+func (s *MemorySubSystem) Apply(cgroupPath string, pid int, res *ResourceConfig) error {
 	if subsysCgroupPath, err := GetCgroupPath(s.Name(), cgroupPath, false); err == nil {
-		if err := ioutil.WriteFile(path.Join(subsysCgroupPath, "tasks"),  []byte(strconv.Itoa(pid)), 0644); err != nil {
-			return fmt.Errorf("set cgroup proc fail %v", err)
+		if res.MemoryLimit != "" {
+			if err := ioutil.WriteFile(path.Join(subsysCgroupPath, "tasks"),  []byte(strconv.Itoa(pid)), 0644); err != nil {
+				return fmt.Errorf("set cgroup proc fail %v", err)
+			}
 		}
 		return nil
 	} else {

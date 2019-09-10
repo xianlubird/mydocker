@@ -9,7 +9,7 @@ type ResourceConfig struct {
 type Subsystem interface {
 	Name() string
 	Set(path string, res *ResourceConfig) error
-	Apply(path string, pid int) error
+	Apply(path string, pid int, res *ResourceConfig) error
 	Remove(path string) error
 }
 

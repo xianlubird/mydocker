@@ -23,7 +23,7 @@ func Run(tty bool, comArray []string, res *subsystems.ResourceConfig) {
 	cgroupManager := cgroups.NewCgroupManager("mydocker-cgroup")
 	defer cgroupManager.Destroy()
 	cgroupManager.Set(res)
-	cgroupManager.Apply(parent.Process.Pid)
+	cgroupManager.Apply(parent.Process.Pid, res)
 
 	sendInitCommand(comArray, writePipe)
 	parent.Wait()

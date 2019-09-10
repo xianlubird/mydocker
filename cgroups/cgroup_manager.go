@@ -19,9 +19,9 @@ func NewCgroupManager(path string) *CgroupManager {
 }
 
 // 将进程pid加入到这个cgroup中
-func (c *CgroupManager) Apply(pid int) error {
+func (c *CgroupManager) Apply(pid int, res *subsystems.ResourceConfig) error {
 	for _, subSysIns := range(subsystems.SubsystemsIns) {
-		subSysIns.Apply(c.Path, pid)
+		subSysIns.Apply(c.Path, pid, res)
 	}
 	return nil
 }
