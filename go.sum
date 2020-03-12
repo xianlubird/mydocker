@@ -1,0 +1,12 @@
+github.com/Sirupsen/logrus v0.8.8-0.20151204141443-446d1c146faa h1:SVjyjVKPxeZlWjE/I/8rXziR/U6a8xfFmGfB11PL7Z8=
+github.com/Sirupsen/logrus v0.8.8-0.20151204141443-446d1c146faa/go.mod h1:rmk17hk6i8ZSAJkSDa7nOxamrG+SP4P0mm+DAvExv4U=
+github.com/mholt/archiver v2.0.1-0.20161215173051-3db696109532+incompatible/go.mod h1:Dh2dOXnSdiLxRiPoVfIr/fI1TwETms9B8CTWfeh7ROU=
+github.com/nwaples/rardecode v0.0.0-20161222234428-18e2160743d3/go.mod h1:5DzqNKiOdpKKBH87u8VlvAnPZMXcGRhxWkRpHbbfGS0=
+github.com/ulikunitz/xz v0.5.2/go.mod h1:2bypXElzHzzJZwzH67Y6wb67pO62Rzfn7BSiF4ABRW8=
+github.com/urfave/cli v1.19.1 h1:0mKm4ZoB74PxYmZVua162y1dGt1qc10MyymYRBf3lb8=
+github.com/urfave/cli v1.19.1/go.mod h1:70zkFmudgCuE/ngEzBv17Jvp/497gISqfk5gWijbERA=
+github.com/vishvananda/netlink v0.0.0-20170105235913-1890b34fa39d h1:71sisrGmCsrVboC+oCHuXc4+T2ysPogrYpsPU95PseQ=
+github.com/vishvananda/netlink v0.0.0-20170105235913-1890b34fa39d/go.mod h1:+SR5DhBJrl6ZM7CoCKvpw5BKroDKQ+PJqOg65H/2ktk=
+github.com/vishvananda/netns v0.0.0-20161219181606-2c9454e4fc6e h1:egtTpNIU6W7dQ5z4EK0IN7v+Ht4ISuf7i+Ks1oz2XaY=
+github.com/vishvananda/netns v0.0.0-20161219181606-2c9454e4fc6e/go.mod h1:ZjcWmFBXmLKZu9Nxj3WKYEafiSqer2rnvPr0en9UNpI=
+golang.org/x/sys v0.0.0-20151211033651-833a04a10549/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
